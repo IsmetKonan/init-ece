@@ -23,36 +23,34 @@ Write-Host $DEKO
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-# --- 7ZIP ---
 $baseUrl = "https://www.7-zip.org/"
 $page = Invoke-WebRequest -Uri $baseUrl -UseBasicParsing
 $downloadLink = ($page.Links | Where-Object { $_.href -match "a/7z.*-x64\.exe" } | Select-Object -First 1).href
-$sevenZipUrl = if ($downloadLink -match "^http") { $downloadLink } else { $baseUrl + $downloadLink }
-$sevenZipPath = Join-Path $scriptDir "7zip.exe"
+$downloadUrl = if ($downloadLink -match "^http") { $downloadLink } else { $baseUrl + $downloadLink }
+$installerPath = Join-Path $scriptDir "7zip-latest-x64.exe"
+Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath
 
-Invoke-WebRequest -Uri $sevenZipUrl -OutFile $sevenZipPath
+$FileName = "TeamViewer_ECE.exe"
+$FilePath = Join-Path $scriptDir $FileName
+Invoke-WebRequest -Uri "https://help.ece24.net/TeamViewer_ECE.exe" -OutFile $FilePath
 
-# --- TEAMVIEWER ---
-$tvPath = Join-Path $scriptDir "TeamViewer_ECE.exe"
-Invoke-WebRequest -Uri "https://help.ece24.net/TeamViewer_ECE.exe" -OutFile $tvPath
+$DownloadUrl = "https://www.pdf-xchange.com/downloads/EditorV10.x64.msi?key=S5m2l6ycL2Imcpo00xVGGpohQ1ODS/40pyL2WXW%2Bms%2BsTE9R4X3uKziSH9gyntNU&version=10.8.4.409"
+$FileName = "PDFXChange_Editor_Plus_10.8.4.409.msi"
+$FilePath = Join-Path $scriptDir $FileName
+Write-Host "Starte Download von PDF-XChange Editor Plus..." -ForegroundColor Cyan
+Invoke-WebRequest -Uri $DownloadUrl -OutFile $FilePath
 
-# --- PDF XCHANGE ---
-$pdfPath = Join-Path $scriptDir "pdfxchange.msi"
-Invoke-WebRequest -Uri "https://www.pdf-xchange.com/downloads/EditorV10.x64.msi?..." -OutFile $pdfPath
+$chromeUrl = "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BDD8A69D1-8F3B-4F0A-9B3C-1234567890AB%7D/chrome/install/GoogleChromeStandaloneEnterprise64.msi"
+$chromePath = Join-Path $scriptDir "chrome-enterprise-x64.msi"
+Invoke-WebRequest -Uri $chromeUrl -OutFile $chromePath
 
-# --- CHROME ---
-$chromePath = Join-Path $scriptDir "chrome.msi"
-Invoke-WebRequest -Uri "https://dl.google.com/.../GoogleChromeStandaloneEnterprise64.msi" -OutFile $chromePath
-
-# --- INSTALL ---
-Write-Host "Installing..." -ForegroundColor Yellow
+Write-Host $DEKO
+Write-Host "Starte stille Installation aller Programme..." -ForegroundColor Yellow
 
 Start-Process -FilePath $sevenZipPath -ArgumentList "/S" -Wait
 Start-Process -FilePath $tvPath -ArgumentList "/S" -Wait
 Start-Process "msiexec.exe" -ArgumentList "/i `"$pdfPath`" /qn /norestart" -Wait
 Start-Process "msiexec.exe" -ArgumentList "/i `"$chromePath`" /qn /norestart" -Wait
-
-Write-Host "Done!" -ForegroundColor Green
 
 Write-Host $DEKO
 Write-Host "All Done!" -ForegroundColor Green
