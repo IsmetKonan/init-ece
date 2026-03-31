@@ -20,17 +20,16 @@ Write-Host 'CC Ismet Konan'
 Write-Host "$VERSION starting up ..."
 Write-Host $DEKO
 
-$scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+$scriptDir = "$HOME\Downloads"
+Write-Host 'Installiere 7-Zip (MSI)...' -ForegroundColor Yellow
 
-Write-Host 'Installiere 7-Zip...' -ForegroundColor Yellow
-
-$installerPath = Join-Path $scriptDir '7zip.exe'
-$sevenZipUrl   = 'https://www.7-zip.org/a/7z2600-x64.exe'
+$installerPath = Join-Path $HOME 'Downloads\7zip.msi'
+$sevenZipUrl   = 'https://www.7-zip.org/a/7z2600-x64.msi'
 
 Invoke-WebRequest -Uri $sevenZipUrl -OutFile $installerPath -ErrorAction SilentlyContinue
 
 if (Test-Path $installerPath) {
-    Start-Process -FilePath $installerPath -ArgumentList '/S' -Wait -WindowStyle Hidden
+    Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installerPath`" /quiet /norestart" -Wait -WindowStyle Hidden
     Write-Host '7-Zip installiert.' -ForegroundColor Green
 }
 else {
@@ -40,21 +39,21 @@ else {
     $page = Invoke-WebRequest -Uri $baseUrl -UseBasicParsing -ErrorAction SilentlyContinue
 
     if ($page) {
-        $downloadLink = ($page.Links | Where-Object { $_.href -match 'a/7z.*-x64\.exe' } | Select-Object -First 1).href
+        $downloadLink = ($page.Links | Where-Object { $_.href -match 'a/7z.*-x64\.msi' } | Select-Object -First 1).href
         $downloadUrl = if ($downloadLink -match '^http') { $downloadLink } else { $baseUrl + $downloadLink }
 
         Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath -ErrorAction SilentlyContinue
 
         if (Test-Path $installerPath) {
-            Start-Process -FilePath $installerPath -ArgumentList '/S' -Wait -WindowStyle Hidden
-            Write-Host '7-Zip über Fallback installiert.' -ForegroundColor Green
+            Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$installerPath`" /quiet /norestart" -Wait -WindowStyle Hidden
+            Write-Host '7-Zip ueber Fallback installiert.' -ForegroundColor Green
         }
         else {
-            Write-Host '7-Zip konnte nicht installiert werden – wird übersprungen.' -ForegroundColor Red
+            Write-Host '7-Zip konnte nicht installiert werden – wird Uebersprungen.' -ForegroundColor Red
         }
     }
     else {
-        Write-Host '7-Zip Webseite nicht erreichbar – übersprungen.' -ForegroundColor Red
+        Write-Host '7-Zip Webseite nicht erreichbar – Uebersprungen.' -ForegroundColor Red
     }
 }
 
