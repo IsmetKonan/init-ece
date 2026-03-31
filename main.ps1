@@ -30,7 +30,7 @@ $sevenZipUrl   = 'https://www.7-zip.org/a/7z2600-x64.exe'
 Invoke-WebRequest -Uri $sevenZipUrl -OutFile $installerPath -ErrorAction SilentlyContinue
 
 if (Test-Path $installerPath) {
-    Start-Process -FilePath $installerPath -ArgumentList '/S' -Wait
+    Start-Process -FilePath $installerPath -ArgumentList '/S' -Wait -WindowStyle Hidden
     Write-Host '7-Zip installiert.' -ForegroundColor Green
 }
 else {
@@ -46,7 +46,7 @@ else {
         Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath -ErrorAction SilentlyContinue
 
         if (Test-Path $installerPath) {
-            Start-Process -FilePath $installerPath -ArgumentList '/S' -Wait
+            Start-Process -FilePath $installerPath -ArgumentList '/S' -Wait -WindowStyle Hidden
             Write-Host '7-Zip über Fallback installiert.' -ForegroundColor Green
         }
         else {
