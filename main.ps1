@@ -23,13 +23,37 @@ Write-Host $DEKO
 
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
-$baseUrl = "https://www.7-zip.org/"
-$page = Invoke-WebRequest -Uri $baseUrl -UseBasicParsing
-$downloadLink = ($page.Links | Where-Object { $_.href -match "a/7z.*-x64\.exe" } | Select-Object -First 1).href
-$downloadUrl = if ($downloadLink -match "^http") { $downloadLink } else { $baseUrl + $downloadLink }
-$installerPath = Join-Path $scriptDir "7zip-latest-x64.exe"
-Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath
-Start-Process -FilePath $installerPath -ArgumentList "/S" -Wait
+try {
+    Write-Host "Installiere 7-Zip..." -ForegroundColor Yellow
+    
+    $sevenZipUrl = "https://www.7-zip.org/a/7z2600-x64.exe"
+    $installerPath = Join-Path $scriptDir "7zip.exe"
+
+    Invoke-WebRequest -Uri $sevenZipUrl -OutFile $installerPath -ErrorAction Stop
+
+    if (Test-Path $installerPath) {
+        Start-Process -FilePath $installerPath -ArgumentList "/S" -Wait
+        Write-Host "7-Zip installiert." -ForegroundColor Green
+    }
+}
+catch {
+    Write-Host "Feste URL fehlgeschlagen – versuche Fallback..." -ForegroundColor DarkYellow
+
+    try {
+        $baseUrl = "https://www.7-zip.org/"
+        $page = Invoke-WebRequest -Uri $baseUrl -UseBasicParsing
+        $downloadLink = ($page.Links | Where-Object { $_.href -match "a/7z.*-x64\.exe" } | Select-Object -First 1).href
+        $downloadUrl = if ($downloadLink -match "^http") { $downloadLink } else { $baseUrl + $downloadLink }
+
+        Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath -ErrorAction Stop
+        Start-Process -FilePath $installerPath -ArgumentList "/S" -Wait
+
+        Write-Host "7-Zip über Fallback installiert." -ForegroundColor Green
+    }
+    catch {
+        Write-Host "7-Zip konnte nicht installiert werden – wird übersprungen." -ForegroundColor Red
+    }
+}
 
 $FileName = "TeamViewer_ECE.exe"
 $FilePath = Join-Path $scriptDir $FileName
