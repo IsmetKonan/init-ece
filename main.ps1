@@ -29,19 +29,19 @@ $downloadLink = ($page.Links | Where-Object { $_.href -match "a/7z.*-x64\.exe" }
 $downloadUrl = if ($downloadLink -match "^http") { $downloadLink } else { $baseUrl + $downloadLink }
 $installerPath = Join-Path $scriptDir "7zip-latest-x64.exe"
 Invoke-WebRequest -Uri $downloadUrl -OutFile $installerPath
-Start-Process -FilePath $sevenZipPath -ArgumentList "/S" -Wait
+Start-Process -FilePath $installerPath -ArgumentList "/S" -Wait
 
 $FileName = "TeamViewer_ECE.exe"
 $FilePath = Join-Path $scriptDir $FileName
 Invoke-WebRequest -Uri "https://help.ece24.net/TeamViewer_ECE.exe" -OutFile $FilePath
-Start-Process -FilePath $tvPath -ArgumentList "/S" -Wait
+Start-Process -FilePath $FilePath -ArgumentList "/S" -Wait
 
 $DownloadUrl = "https://www.pdf-xchange.com/downloads/EditorV10.x64.msi?key=S5m2l6ycL2Imcpo00xVGGpohQ1ODS/40pyL2WXW%2Bms%2BsTE9R4X3uKziSH9gyntNU&version=10.8.4.409"
 $FileName = "PDFXChange_Editor_Plus_10.8.4.409.msi"
 $FilePath = Join-Path $scriptDir $FileName
 Write-Host "Starte Download von PDF-XChange Editor Plus..." -ForegroundColor Cyan
 Invoke-WebRequest -Uri $DownloadUrl -OutFile $FilePath
-Start-Process "msiexec.exe" -ArgumentList "/i `"$pdfPath`" /qn /norestart" -Wait
+Start-Process "msiexec.exe" -ArgumentList "/i `"$FilePath`" /qn /norestart" -Wait
 
 $chromeUrl = "https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BDD8A69D1-8F3B-4F0A-9B3C-1234567890AB%7D/chrome/install/GoogleChromeStandaloneEnterprise64.msi"
 $chromePath = Join-Path $scriptDir "chrome-enterprise-x64.msi"
