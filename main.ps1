@@ -1,6 +1,6 @@
 #
 # Made by Ismet Konan for ece24
-# Last Edited 31.03.2026
+# Last Edited 07.04.2026
 #
 
 $VERSION     = "1.0.1"
@@ -57,13 +57,13 @@ else {
     }
 }
 
+$PublicDesktop = 'C:\Users\Public\Desktop'
 $FileName = 'TeamViewer_ECE.exe'
-$FilePath = Join-Path $scriptDir $FileName
+$FilePath = Join-Path $PublicDesktop $FileName
 write-Host 'Starte Download von TeamViewer...' -ForegroundColor Cyan
 Invoke-WebRequest -Uri 'https://help.ece24.net/TeamViewer_ECE.exe' -OutFile $FilePath
 Start-Process -FilePath $FilePath -ArgumentList '/S' -Wait
 Write-Host 'TeamViewer installiert!' -ForegroundColor Green
-
 
 $DownloadUrl = 'https://www.pdf-xchange.com/downloads/EditorV10.x64.msi?key=S5m2l6ycL2Imcpo00xVGGpohQ1ODS/40pyL2WXW%2Bms%2BsTE9R4X3uKziSH9gyntNU&version=10.8.4.409'
 $FileName = 'PDFXChange_Editor_Plus_10.8.4.409.msi'
