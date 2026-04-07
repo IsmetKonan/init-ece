@@ -1,8 +1,8 @@
 @echo off
 color 0A
-title AP_READER
+title init_ece
 
-powershell -NoProfile -ExecutionPolicy Bypass -Command "& '%~dp0main.ps1' -TargetFolder '%TARGET%'"
+powershell -NoProfile -Command "Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File \"%~dp0main.ps1\" -TargetFolder \"%TARGET%\"' -Verb RunAs"
 
-echo AP_READER Done, BYE!
-timeout /t 20
+echo int_ece Done, BYE!
+exit /b
