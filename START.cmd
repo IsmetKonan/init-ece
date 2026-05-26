@@ -2,7 +2,8 @@
 color 0A
 title init_ece
 
-powershell -NoProfile -Command "Start-Process powershell -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File \"%~dp0main.ps1\" -TargetFolder \"%TARGET%\"' -Verb RunAs"
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+ "Start-Process powershell -Verb RunAs -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File ""%~dp0main.ps1""'"
 
-echo int_ece Done, BYE!
+echo init_ece started as Administrator
 exit /b
