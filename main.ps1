@@ -20,6 +20,16 @@ Write-Host 'CC Ismet Konan'
 Write-Host "$VERSION starting up ..."
 Write-Host $DEKO
 
+$isAdmin = ([Security.Principal.WindowsPrincipal] `
+    [Security.Principal.WindowsIdentity]::GetCurrent()
+).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+
+if (-not $isAdmin) {
+    Write-Host "Fehler: Bitte starten sie das Programm als Administrator!" -ForegroundColor Red
+    pause
+    exit 1
+}
+
 $scriptDir = "$HOME\Downloads"
 Write-Host 'Installiere 7-Zip (MSI)...' -ForegroundColor Yellow
 
