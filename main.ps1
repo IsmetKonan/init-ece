@@ -1,9 +1,9 @@
 #
 # Made by Ismet Konan for ece24
-# Last Edited 02.06.2026
+# Last Edited 03.06.2026
 #
 
-$VERSION     = "3.0.0"
+$VERSION     = "3.1.0"
 $DEKO        = "-----------------------------------------------------------------"
 $EMPTY_LINE  = "                                                                 "
 $scriptDir = "$HOME\Downloads"
@@ -41,6 +41,7 @@ $chrome = $true
 $sevenzip = $true
 $teamViewer = $true
 $pdfXchange = $true
+$adobeReader = $true
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -80,8 +81,15 @@ $CheckboxP.Size = New-Object System.Drawing.Size(200, 30)
 $CheckboxP.Text = "PDF-XChange Editor installieren"
 $Form.Controls.Add($CheckboxP)
 
+$CheckboxAD = New-Object System.Windows.Forms.CheckBox
+$CheckboxAD.Location = New-Object System.Drawing.Size(20, 170)
+$CheckboxAD.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxAD.Text = "Adobe Reader installieren"
+$Form.Controls.Add($CheckboxAD)
+
+
 $Button = New-Object System.Windows.Forms.Button
-$Button.Location = New-Object System.Drawing.Point(20, 190) 
+$Button.Location = New-Object System.Drawing.Point(20, 210) 
 $Button.Size = New-Object System.Drawing.Size(100, 30)
 $Button.Text = "Uebernehmen"
 
@@ -91,14 +99,15 @@ $Button.Add_Click({
     $sevenzipChecked = $Checkbox7.Checked
     $teamViewerChecked = $CheckboxT.Checked
     $pdfXchangeChecked = $CheckboxP.Checked
-
+    $adobeReaderChecked = $CheckboxAD.Checked
     # variablen setzen
     $script:firefox = $firefoxChecked
     $script:chrome = $chromeChecked
     $script:sevenzip = $sevenzipChecked
     $script:teamViewer = $teamViewerChecked
     $script:pdfXchange = $pdfXchangeChecked
-    
+    $script:adobeReader = $adobeReaderChecked
+
     # schliessen
     $Form.Close()
 })
@@ -129,6 +138,22 @@ if ($firefox) {
     Write-Host 'Firefox installiert!' -ForegroundColor Green
 }
 
+if ($adobeReader) {
+    Write-Host 'Installiere Adobe Reader...' -ForegroundColor Yellow
+    $installerPath = Join-Path $HOME 'Downloads\AdobeReader.exe'
+    $adobeReaderUrl = 'https://init.ece24.net/Assets/Reader.exe'
+
+    Invoke-WebRequest -Uri $adobeReaderUrl -OutFile $installerPath -ErrorAction SilentlyContinue
+
+    if (Test-Path $installerPath) {
+        Start-Process -FilePath $installerPath -ArgumentList '/sAll /msi /norestart' -Wait -WindowStyle Hidden
+        Write-Host 'Adobe Reader installiert.' -ForegroundColor Green
+    }
+    else {
+        Write-Host 'Download fehlgeschlagen – Adobe Reader konnte nicht installiert werden.' -ForegroundColor Red
+    }
+
+}
 
 if ($sevenzip) {
     Write-Host 'Installiere 7-Zip (MSI)...' -ForegroundColor Yellow
