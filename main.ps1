@@ -42,6 +42,8 @@ $sevenzip = $true
 $teamViewer = $true
 $pdfXchange = $true
 $adobeReader = $true
+$TeamViewerHost = $true
+
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -87,7 +89,13 @@ $CheckboxAD.Size = New-Object System.Drawing.Size(200, 30)
 $CheckboxAD.Text = "Adobe Reader installieren"
 $Form.Controls.Add($CheckboxAD)
 
+$CheckboxTVH = New-Object System.Windows.Forms.CheckBox
+$CheckboxTVH.Location = New-Object System.Drawing.Size(20, 200)
+$CheckboxTVH.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxTVH.Text = "TeamViewer Host installieren"
+$Form.Controls.Add($CheckboxTVH)
 
+    
 $Button = New-Object System.Windows.Forms.Button
 $Button.Location = New-Object System.Drawing.Point(20, 210) 
 $Button.Size = New-Object System.Drawing.Size(100, 30)
@@ -100,6 +108,7 @@ $Button.Add_Click({
     $teamViewerChecked = $CheckboxT.Checked
     $pdfXchangeChecked = $CheckboxP.Checked
     $adobeReaderChecked = $CheckboxAD.Checked
+    $teamViewerHostChecked = $CheckboxTVH.Checked
     # variablen setzen
     $script:firefox = $firefoxChecked
     $script:chrome = $chromeChecked
@@ -107,7 +116,7 @@ $Button.Add_Click({
     $script:teamViewer = $teamViewerChecked
     $script:pdfXchange = $pdfXchangeChecked
     $script:adobeReader = $adobeReaderChecked
-
+    $script:TeamViewerHost = $teamViewerHostChecked
     # schliessen
     $Form.Close()
 })
@@ -121,6 +130,7 @@ $Form.Controls.Add($Button)
 #Write-Host "7-Zip: $sevenzip" -ForegroundColor Cyan
 #Write-Host "TeamViewer: $teamViewer" -ForegroundColor Cyan
 #Write-Host "PDF-XChange Editor: $pdfXchange" -ForegroundColor Cyan
+#Write-Host "TeamViewer Host: $TeamViewerHost" -ForegroundColor Cyan
 
 # // Installation
 
@@ -154,6 +164,33 @@ if ($adobeReader) {
     }
 
 }
+
+if ($TeamViewerHost) {
+    Write-Host 'Installiere TeamViewer Host...' -ForegroundColor Yellow
+    $installerPath = Join-Path $HOME 'Downloads\TeamViewer_Host.exe'
+    $teamViewerHostUrl = 'https://download.teamviewer.com/download/TeamViewer_Host_Setup_x64.exe?_gl=1*1vnbudr*_gcl_au*MTIwNjc0Nzk2Ni4xNzgwNDkwNDcw'
+
+    Invoke-WebRequest -Uri $teamViewerHostUrl -OutFile $installerPath -ErrorAction SilentlyContinue
+
+    if (Test-Path $installerPath) {
+        #Start-Process -FilePath $installerPath -ArgumentList '/sAll /msi /norestart' -Wait -WindowStyle Hidden
+        #Start-Process -FilePath $installerPath
+        $proc = Start-Process `
+            -FilePath $installerPath `
+            -ArgumentList '/S' `
+            -PassThru `
+            -Wait
+
+        Write-Host "ExitCode: $($proc.ExitCode)"
+        
+        Write-Host 'TeamViewer Host installiert.' -ForegroundColor Green
+    }
+    else {
+        Write-Host 'Download fehlgeschlagen – TeamViewer Host konnte nicht installiert werden.' -ForegroundColor Red
+    }
+
+}
+
 
 if ($sevenzip) {
     Write-Host 'Installiere 7-Zip (MSI)...' -ForegroundColor Yellow
