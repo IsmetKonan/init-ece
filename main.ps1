@@ -3,7 +3,7 @@
 # Last Edited 03.06.2026
 #
 
-$VERSION     = "3.1.0"
+$VERSION     = "3.1.1"
 $DEKO        = "-----------------------------------------------------------------"
 $EMPTY_LINE  = "                                                                 "
 $scriptDir = "$HOME\Downloads"
@@ -43,14 +43,14 @@ $teamViewer = $true
 $pdfXchange = $true
 $adobeReader = $true
 $TeamViewerHost = $true
-
+$pdf24 = $true
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Services Auswaehlen"
-$Form.Size = New-Object System.Drawing.Size(350, 300)
+$Form.Size = New-Object System.Drawing.Size(380, 340)
 $Form.StartPosition = "CenterScreen"
 
 $Checkbox = New-Object System.Windows.Forms.CheckBox
@@ -95,9 +95,14 @@ $CheckboxTVH.Size = New-Object System.Drawing.Size(200, 30)
 $CheckboxTVH.Text = "TeamViewer Host installieren"
 $Form.Controls.Add($CheckboxTVH)
 
-    
+$CheckboxP24 = New-Object System.Windows.Forms.CheckBox
+$CheckboxP24.Location = New-Object System.Drawing.Size(20, 230)
+$CheckboxP24.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxP24.Text = "PDF24 installieren"
+$Form.Controls.Add($CheckboxP24)
+
 $Button = New-Object System.Windows.Forms.Button
-$Button.Location = New-Object System.Drawing.Point(20, 210) 
+$Button.Location = New-Object System.Drawing.Point(20, 260) 
 $Button.Size = New-Object System.Drawing.Size(100, 30)
 $Button.Text = "Uebernehmen"
 
@@ -109,6 +114,7 @@ $Button.Add_Click({
     $pdfXchangeChecked = $CheckboxP.Checked
     $adobeReaderChecked = $CheckboxAD.Checked
     $teamViewerHostChecked = $CheckboxTVH.Checked
+    $pdf24Checked = $CheckboxP24.Checked
     # variablen setzen
     $script:firefox = $firefoxChecked
     $script:chrome = $chromeChecked
@@ -117,20 +123,13 @@ $Button.Add_Click({
     $script:pdfXchange = $pdfXchangeChecked
     $script:adobeReader = $adobeReaderChecked
     $script:TeamViewerHost = $teamViewerHostChecked
+    $script:pdf24 = $pdf24Checked
     # schliessen
     $Form.Close()
 })
 
 $Form.Controls.Add($Button)
 [void]$Form.ShowDialog()
-
-# kontrolle alles ausgeben
-#Write-Host "Firefox: $firefox" -ForegroundColor Cyan
-#Write-Host "Chrome: $chrome" -ForegroundColor Cyan
-#Write-Host "7-Zip: $sevenzip" -ForegroundColor Cyan
-#Write-Host "TeamViewer: $teamViewer" -ForegroundColor Cyan
-#Write-Host "PDF-XChange Editor: $pdfXchange" -ForegroundColor Cyan
-#Write-Host "TeamViewer Host: $TeamViewerHost" -ForegroundColor Cyan
 
 # // Installation
 
@@ -146,6 +145,18 @@ if ($firefox) {
     Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$firefoxPath`" /qn /norestart" -Wait
     
     Write-Host 'Firefox installiert!' -ForegroundColor Green
+}
+
+if ($pdf24) {
+    Write-Host 'Starte Download von PDF24...' -ForegroundColor Cyan
+    $pdf24Url = 'https://download.pdf24.org/pdf24-creator-latest-x64.exe'
+    $pdf24Path = Join-Path $scriptDir 'PDF24_Installer.exe'
+    
+    Invoke-WebRequest -Uri $pdf24Url -OutFile $pdf24Path -UseBasicParsing
+    
+    Start-Process -FilePath $pdf24Path -ArgumentList '/S' -Wait
+    
+    Write-Host 'PDF24 installiert!' -ForegroundColor Green
 }
 
 if ($adobeReader) {
@@ -173,8 +184,6 @@ if ($TeamViewerHost) {
     Invoke-WebRequest -Uri $teamViewerHostUrl -OutFile $installerPath -ErrorAction SilentlyContinue
 
     if (Test-Path $installerPath) {
-        #Start-Process -FilePath $installerPath -ArgumentList '/sAll /msi /norestart' -Wait -WindowStyle Hidden
-        #Start-Process -FilePath $installerPath
         $proc = Start-Process `
             -FilePath $installerPath `
             -ArgumentList '/S' `
