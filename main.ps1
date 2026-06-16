@@ -149,13 +149,18 @@ if ($firefox) {
 
 if ($pdf24) {
     Write-Host 'Starte Download von PDF24...' -ForegroundColor Cyan
+    Write-Host 'Diese Installation kann einige Minuten dauern. Bitte habe geduld!' -ForegroundColor Yellow
+
     $pdf24Url = 'https://download.pdf24.org/pdf24-creator-latest-x64.exe'
     $pdf24Path = Join-Path $scriptDir 'PDF24_Installer.exe'
-    
+
     Invoke-WebRequest -Uri $pdf24Url -OutFile $pdf24Path -UseBasicParsing
-    
-    Start-Process -FilePath $pdf24Path -ArgumentList '/S' -Wait
-    
+
+    Start-Process `
+        -FilePath $pdf24Path `
+        -ArgumentList '/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-' `
+        -Wait
+
     Write-Host 'PDF24 installiert!' -ForegroundColor Green
 }
 
