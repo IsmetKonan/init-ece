@@ -253,9 +253,9 @@ if ($teamViewer) {
     Write-Host 'TeamViewer installiert!' -ForegroundColor Green
 }
 
-if ($pdfXchange) {
-    $DownloadUrl = 'https://www.pdf-xchange.com/downloads/EditorV10.x64.msi?key=S5m2l6ycL2Imcpo00xVGGpohQ1ODS/40pyL2WXW%2Bms%2BsTE9R4X3uKziSH9gyntNU&version=10.8.4.409'    
-    $FileName = 'PDFXChange_Editor_Plus_10.8.4.409.msi'
+if ($pdfXchange) {    
+    $DownloadUrl = 'https://www.pdf-xchange.com/downloads/EditorV11.x64.msi?key=QqcIJ/QN%2BMKPQk8fKNTabbAz28su7eWxP/I7YClBdlbWUFAK16S9FfiDz/KFN/7M&version=11.0.1.0'    
+    $FileName = 'PDFXChange_Editor_Plus_11.0.1.0.msi'
     $FilePath = Join-Path $scriptDir $FileName
     Write-Host 'Starte Download von PDF-XChange Editor Plus...' -ForegroundColor Cyan
     Invoke-WebRequest -Uri $DownloadUrl -OutFile $FilePath
