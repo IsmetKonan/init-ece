@@ -1,13 +1,12 @@
 #
 # Made by Ismet Konan for ece24
-# Last Edited 03.06.2026
+# Last Edited 13.10.2026
 #
 
-$VERSION     = "3.1.1"
+$VERSION     = "5.0.0"
 $DEKO        = "-----------------------------------------------------------------"
 $EMPTY_LINE  = "                                                                 "
 $scriptDir = "$HOME\Downloads"
-
 $Host.UI.RawUI.ForegroundColor = 'Blue'
 Write-Host $EMPTY_LINE
 Write-Host $DEKO
@@ -21,7 +20,7 @@ Write-Host 'CC Ismet Konan'
 Write-Host "$VERSION starting up ..."
 Write-Host $DEKO
 
-# 
+#
 # // check fuer Admin wegen MSI-Installationen
 # 
 
@@ -43,14 +42,19 @@ $teamViewer = $true
 $pdfXchange = $true
 $adobeReader = $true
 $TeamViewerHost = $true
-$pdf24 = $true
+$pdf24     = $true
+$wireguard = $true
+$nextcloud = $true
+$keepass = $true
+$keepassxc = $true
+$datev = $true
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Services Auswaehlen"
-$Form.Size = New-Object System.Drawing.Size(380, 340)
+$Form.Size = New-Object System.Drawing.Size(380, 500) # x y
 $Form.StartPosition = "CenterScreen"
 
 $Checkbox = New-Object System.Windows.Forms.CheckBox
@@ -101,8 +105,40 @@ $CheckboxP24.Size = New-Object System.Drawing.Size(200, 30)
 $CheckboxP24.Text = "PDF24 installieren"
 $Form.Controls.Add($CheckboxP24)
 
+$CheckboxWG = New-Object System.Windows.Forms.CheckBox
+$CheckboxWG.Location = New-Object System.Drawing.Size(20, 260)
+$CheckboxWG.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxWG.Text = "WireGuard installieren"
+$Form.Controls.Add($CheckboxWG)
+
+$CheckboxNC = New-Object System.Windows.Forms.CheckBox
+$CheckboxNC.Location = New-Object System.Drawing.Size(20, 290)
+$CheckboxNC.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxNC.Text = "Nextcloud installieren"
+$Form.Controls.Add($CheckboxNC)
+
+#keepass checkbox
+$CheckboxKP = New-Object System.Windows.Forms.CheckBox
+$CheckboxKP.Location = New-Object System.Drawing.Size(20, 320)
+$CheckboxKP.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxKP.Text = "KeePass installieren"
+$Form.Controls.Add($CheckboxKP)
+
+$CheckboxK = New-Object System.Windows.Forms.CheckBox
+$CheckboxK.Location = New-Object System.Drawing.Size(20, 350)
+$CheckboxK.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxK.Text = "KeePassXC installieren"
+$Form.Controls.Add($CheckboxK)
+
+#datev checkbox
+$CheckboxD = New-Object System.Windows.Forms.CheckBox
+$CheckboxD.Location = New-Object System.Drawing.Size(20, 380)
+$CheckboxD.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxD.Text = "DATEV installieren"
+$Form.Controls.Add($CheckboxD)
+
 $Button = New-Object System.Windows.Forms.Button
-$Button.Location = New-Object System.Drawing.Point(20, 260) 
+$Button.Location = New-Object System.Drawing.Point(20, 420) 
 $Button.Size = New-Object System.Drawing.Size(100, 30)
 $Button.Text = "Uebernehmen"
 
@@ -115,6 +151,11 @@ $Button.Add_Click({
     $adobeReaderChecked = $CheckboxAD.Checked
     $teamViewerHostChecked = $CheckboxTVH.Checked
     $pdf24Checked = $CheckboxP24.Checked
+    $wireguardChecked = $CheckboxWG.Checked
+    $nextcloudChecked = $CheckboxNC.Checked
+    $keepassxcChecked = $CheckboxK.Checked
+    $keepassChecked = $CheckboxKP.Checked
+    $datevChecked = $CheckboxD.Checked
     # variablen setzen
     $script:firefox = $firefoxChecked
     $script:chrome = $chromeChecked
@@ -124,6 +165,11 @@ $Button.Add_Click({
     $script:adobeReader = $adobeReaderChecked
     $script:TeamViewerHost = $teamViewerHostChecked
     $script:pdf24 = $pdf24Checked
+    $script:wireguard = $wireguardChecked
+    $script:nextcloud = $nextcloudChecked
+    $script:keepassxc = $keepassxcChecked
+    $script:keepass = $keepassChecked
+    $script:datev = $datevChecked
     # schliessen
     $Form.Close()
 })
@@ -270,6 +316,80 @@ if ($chrome) {
     Invoke-WebRequest -Uri $chromeUrl -OutFile $chromePath
     Start-Process 'msiexec.exe' -ArgumentList "/i `"$chromePath`" /qn /norestart" -Wait
     write-Host 'Google Chrome Enterprise installiert!' -ForegroundColor Green
+}
+
+if ($wireguard) {
+    write-Host 'Starte Download von WireGuard...' -ForegroundColor Cyan
+    $wireguardUrl = 'https://download.wireguard.com/windows-client/wireguard-amd64-1.1.1.msi'
+    $wireguardPath = Join-Path $scriptDir 'wireguard-x64.msi'
+    Invoke-WebRequest -Uri $wireguardUrl -OutFile $wireguardPath
+    Start-Process 'msiexec.exe' -ArgumentList "/i `"$wireguardPath`" /qn /norestart" -Wait
+    write-Host 'WireGuard installiert!' -ForegroundColor Green
+}
+
+if ($nextcloud) {
+    write-Host 'Starte Download von Nextcloud...' -ForegroundColor Cyan
+    $nextcloudUrl = 'https://download.nextcloud.com/desktop/releases/Windows/Nextcloud-35.0.0-x64.msi'
+    $nextcloudPath = Join-Path $scriptDir 'nextcloud-x64.msi'
+    Invoke-WebRequest -Uri $nextcloudUrl -OutFile $nextcloudPath
+    Start-Process 'msiexec.exe' -ArgumentList "/i `"$nextcloudPath`" /qn /norestart" -Wait
+    write-Host 'Nextcloud installiert!' -ForegroundColor Green
+}
+
+if ($keepass) {
+    write-Host 'Starte Download von KeePass...' -ForegroundColor Cyan
+    $keepassUrl = 'https://init.ece24.net/Assets/KeePass-2.61.1.msi'
+    $keepassPath = Join-Path $scriptDir 'keepass-x64.msi'
+    Invoke-WebRequest -Uri $keepassUrl -OutFile $keepassPath -ErrorAction Stop
+    $keepassProcess = Start-Process 'msiexec.exe' -ArgumentList "/i `"$keepassPath`" /qn /norestart" -Wait -PassThru
+    if ($keepassProcess.ExitCode -notin @(0, 3010)) {
+        throw "KeePass installation failed with exit code $($keepassProcess.ExitCode)."
+    }
+    write-Host 'KeePass installiert!' -ForegroundColor Green
+}
+
+if ($keepassxc) {
+    write-Host 'Starte Download von KeePassXC...' -ForegroundColor Cyan
+    $keepassxcUrl = 'https://github.com/keepassxreboot/keepassxc/releases/download/2.7.12/KeePassXC-2.7.12-Win64.msi'
+    $keepassxcPath = Join-Path $scriptDir 'keepassxc-x64.msi'
+    Invoke-WebRequest -Uri $keepassxcUrl -OutFile $keepassxcPath
+    Start-Process 'msiexec.exe' -ArgumentList "/i `"$keepassxcPath`" /qn /norestart" -Wait
+    write-Host 'KeePassXC installiert!' -ForegroundColor Green
+}
+
+if ($datev) {
+    Write-Host 'Starte Installation des DATEV Sicherheitspakets Compact...' -ForegroundColor Cyan
+    $wingetCommand = Get-Command 'winget.exe' -ErrorAction Stop
+    $datevPackageId = 'DATEV.SicherheitspaketCompact'
+
+    & $wingetCommand.Source list --id $datevPackageId --exact --source winget --scope machine --accept-source-agreements
+    $lookupExitCode = $LASTEXITCODE
+    $lookupExitHex = '0x{0:X8}' -f [BitConverter]::ToUInt32([BitConverter]::GetBytes([int]$lookupExitCode), 0)
+    if ($lookupExitCode -eq 0) {
+        $datevAction = 'upgrade'
+    }
+    elseif ($lookupExitHex -eq '0x8A150014') {
+        $datevAction = 'install'
+    }
+    else {
+        throw "DATEV-Paketstatus konnte nicht ermittelt werden (WinGet $lookupExitHex)."
+    }
+
+    & $wingetCommand.Source $datevAction --id $datevPackageId --exact --source winget --scope machine --silent --accept-source-agreements --accept-package-agreements
+    $installExitCode = $LASTEXITCODE
+    $installExitHex = '0x{0:X8}' -f [BitConverter]::ToUInt32([BitConverter]::GetBytes([int]$installExitCode), 0)
+    if ($installExitCode -eq 3010) {
+        Write-Host 'DATEV-Installation abgeschlossen; ein Neustart ist erforderlich.' -ForegroundColor Yellow
+    }
+    elseif ($installExitCode -ne 0 -and -not ($datevAction -eq 'upgrade' -and $installExitHex -eq '0x8A15002B')) {
+        throw "DATEV-Installation fehlgeschlagen (WinGet $installExitHex)."
+    }
+
+    & $wingetCommand.Source list --id $datevPackageId --exact --source winget --scope machine --accept-source-agreements
+    if ($LASTEXITCODE -ne 0) {
+        throw 'DATEV-Sicherheitspaket Compact wurde nach der Installation nicht gefunden.'
+    }
+    Write-Host 'DATEV Sicherheitspaket Compact installiert bzw. aktuell.' -ForegroundColor Green
 }
 
 Write-Host $DEKO
