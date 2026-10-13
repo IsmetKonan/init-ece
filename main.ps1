@@ -3,7 +3,7 @@
 # Last Edited 13.10.2026
 #
 
-$VERSION     = "5.0.0"
+$VERSION     = "5.0.1 - alpha" 
 $DEKO        = "-----------------------------------------------------------------"
 $EMPTY_LINE  = "                                                                 "
 $scriptDir = "$HOME\Downloads"
@@ -48,13 +48,14 @@ $nextcloud = $true
 $keepass = $true
 $keepassxc = $true
 $datev = $true
+$libreOffice = $true
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Services Auswaehlen"
-$Form.Size = New-Object System.Drawing.Size(380, 500) # x y
+$Form.Size = New-Object System.Drawing.Size(380, 540) # x y
 $Form.StartPosition = "CenterScreen"
 
 $Checkbox = New-Object System.Windows.Forms.CheckBox
@@ -137,8 +138,14 @@ $CheckboxD.Size = New-Object System.Drawing.Size(200, 30)
 $CheckboxD.Text = "DATEV installieren"
 $Form.Controls.Add($CheckboxD)
 
+$CheckboxL = New-Object System.Windows.Forms.CheckBox
+$CheckboxL.Location = New-Object System.Drawing.Size(20, 410)
+$CheckboxL.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxL.Text = "LibreOffice installieren"
+$Form.Controls.Add($CheckboxL)
+
 $Button = New-Object System.Windows.Forms.Button
-$Button.Location = New-Object System.Drawing.Point(20, 420) 
+$Button.Location = New-Object System.Drawing.Point(20, 450) 
 $Button.Size = New-Object System.Drawing.Size(100, 30)
 $Button.Text = "Uebernehmen"
 
@@ -156,6 +163,7 @@ $Button.Add_Click({
     $keepassxcChecked = $CheckboxK.Checked
     $keepassChecked = $CheckboxKP.Checked
     $datevChecked = $CheckboxD.Checked
+    $libreOfficeChecked = $CheckboxL.Checked
     # variablen setzen
     $script:firefox = $firefoxChecked
     $script:chrome = $chromeChecked
@@ -170,6 +178,7 @@ $Button.Add_Click({
     $script:keepassxc = $keepassxcChecked
     $script:keepass = $keepassChecked
     $script:datev = $datevChecked
+    $script:libreOffice = $libreOfficeChecked
     # schliessen
     $Form.Close()
 })
@@ -390,6 +399,15 @@ if ($datev) {
         throw 'DATEV-Sicherheitspaket Compact wurde nach der Installation nicht gefunden.'
     }
     Write-Host 'DATEV Sicherheitspaket Compact installiert bzw. aktuell.' -ForegroundColor Green
+}
+
+if ($libreOffice) {
+    Write-Host 'Starte Download von LibreOffice...' -ForegroundColor Cyan
+    $libreOfficeUrl = 'https://download.documentfoundation.org/libreoffice/stable/26.8.1/win/x86_64/LibreOffice_26.8.1_Win_x86-64.msi'
+    $libreOfficePath = Join-Path $scriptDir 'libreoffice-x64.msi'
+    Invoke-WebRequest -Uri $libreOfficeUrl -OutFile $libreOfficePath
+    Start-Process 'msiexec.exe' -ArgumentList "/i `"$libreOfficePath`" /qn /norestart" -Wait
+    Write-Host 'LibreOffice installiert!' -ForegroundColor Green
 }
 
 Write-Host $DEKO
