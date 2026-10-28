@@ -3,7 +3,7 @@
 # Last Edited 13.10.2026
 #
 
-$VERSION     = "5.0.1 - alpha" 
+$VERSION     = "5.1.0" 
 $DEKO        = "-----------------------------------------------------------------"
 $EMPTY_LINE  = "                                                                 "
 $scriptDir = "$HOME\Downloads"
@@ -49,103 +49,117 @@ $keepass = $true
 $keepassxc = $true
 $datev = $true
 $libreOffice = $true
+$thunderbird = $true
+$brotherPrinter = $true
 
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Services Auswaehlen"
-$Form.Size = New-Object System.Drawing.Size(380, 540) # x y
+$Form.ClientSize = New-Object System.Drawing.Size(420, 600)
 $Form.StartPosition = "CenterScreen"
 
 $Checkbox = New-Object System.Windows.Forms.CheckBox
 $Checkbox.Location = New-Object System.Drawing.Size(20, 20)
-$Checkbox.Size = New-Object System.Drawing.Size(200, 30)
+$Checkbox.Size = New-Object System.Drawing.Size(360, 30)
 $Checkbox.Text = "Firefox installieren"
 $Form.Controls.Add($Checkbox)
 
 $CheckboxC = New-Object System.Windows.Forms.CheckBox
 $CheckboxC.Location = New-Object System.Drawing.Size(20, 50)
-$CheckboxC.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxC.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxC.Text = "Chrome installieren"
 $Form.Controls.Add($CheckboxC)
 
 $Checkbox7 = New-Object System.Windows.Forms.CheckBox
 $Checkbox7.Location = New-Object System.Drawing.Size(20, 80)
-$Checkbox7.Size = New-Object System.Drawing.Size(200, 30)
+$Checkbox7.Size = New-Object System.Drawing.Size(360, 30)
 $Checkbox7.Text = "7-Zip installieren"
 $Form.Controls.Add($Checkbox7)
 
 $CheckboxT = New-Object System.Windows.Forms.CheckBox
 $CheckboxT.Location = New-Object System.Drawing.Size(20, 110)
-$CheckboxT.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxT.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxT.Text = "TeamViewer installieren"
 $Form.Controls.Add($CheckboxT)
 
 $CheckboxP = New-Object System.Windows.Forms.CheckBox
 $CheckboxP.Location = New-Object System.Drawing.Size(20, 140)
-$CheckboxP.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxP.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxP.Text = "PDF-XChange Editor installieren"
 $Form.Controls.Add($CheckboxP)
 
 $CheckboxAD = New-Object System.Windows.Forms.CheckBox
 $CheckboxAD.Location = New-Object System.Drawing.Size(20, 170)
-$CheckboxAD.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxAD.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxAD.Text = "Adobe Reader installieren"
 $Form.Controls.Add($CheckboxAD)
 
 $CheckboxTVH = New-Object System.Windows.Forms.CheckBox
 $CheckboxTVH.Location = New-Object System.Drawing.Size(20, 200)
-$CheckboxTVH.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxTVH.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxTVH.Text = "TeamViewer Host installieren"
 $Form.Controls.Add($CheckboxTVH)
 
 $CheckboxP24 = New-Object System.Windows.Forms.CheckBox
 $CheckboxP24.Location = New-Object System.Drawing.Size(20, 230)
-$CheckboxP24.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxP24.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxP24.Text = "PDF24 installieren"
 $Form.Controls.Add($CheckboxP24)
 
 $CheckboxWG = New-Object System.Windows.Forms.CheckBox
 $CheckboxWG.Location = New-Object System.Drawing.Size(20, 260)
-$CheckboxWG.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxWG.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxWG.Text = "WireGuard installieren"
 $Form.Controls.Add($CheckboxWG)
 
 $CheckboxNC = New-Object System.Windows.Forms.CheckBox
 $CheckboxNC.Location = New-Object System.Drawing.Size(20, 290)
-$CheckboxNC.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxNC.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxNC.Text = "Nextcloud installieren"
 $Form.Controls.Add($CheckboxNC)
 
 #keepass checkbox
 $CheckboxKP = New-Object System.Windows.Forms.CheckBox
 $CheckboxKP.Location = New-Object System.Drawing.Size(20, 320)
-$CheckboxKP.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxKP.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxKP.Text = "KeePass installieren"
 $Form.Controls.Add($CheckboxKP)
 
 $CheckboxK = New-Object System.Windows.Forms.CheckBox
 $CheckboxK.Location = New-Object System.Drawing.Size(20, 350)
-$CheckboxK.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxK.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxK.Text = "KeePassXC installieren"
 $Form.Controls.Add($CheckboxK)
 
 #datev checkbox
 $CheckboxD = New-Object System.Windows.Forms.CheckBox
 $CheckboxD.Location = New-Object System.Drawing.Size(20, 380)
-$CheckboxD.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxD.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxD.Text = "DATEV installieren"
 $Form.Controls.Add($CheckboxD)
 
 $CheckboxL = New-Object System.Windows.Forms.CheckBox
 $CheckboxL.Location = New-Object System.Drawing.Size(20, 410)
-$CheckboxL.Size = New-Object System.Drawing.Size(200, 30)
+$CheckboxL.Size = New-Object System.Drawing.Size(360, 30)
 $CheckboxL.Text = "LibreOffice installieren"
 $Form.Controls.Add($CheckboxL)
 
+$CheckboxTH = New-Object System.Windows.Forms.CheckBox
+$CheckboxTH.Location = New-Object System.Drawing.Size(20, 440)
+$CheckboxTH.Size = New-Object System.Drawing.Size(360, 30)
+$CheckboxTH.Text = "Thunderbird installieren"
+$Form.Controls.Add($CheckboxTH)
+
+$CheckboxB = New-Object System.Windows.Forms.CheckBox
+$CheckboxB.Location = New-Object System.Drawing.Size(20, 470)
+$CheckboxB.Size = New-Object System.Drawing.Size(360, 30)
+$CheckboxB.Text = "Brother Printer & Search installieren"
+$Form.Controls.Add($CheckboxB)
+
 $Button = New-Object System.Windows.Forms.Button
-$Button.Location = New-Object System.Drawing.Point(20, 450) 
+$Button.Location = New-Object System.Drawing.Point(20, 520)
 $Button.Size = New-Object System.Drawing.Size(100, 30)
 $Button.Text = "Uebernehmen"
 
@@ -164,6 +178,9 @@ $Button.Add_Click({
     $keepassChecked = $CheckboxKP.Checked
     $datevChecked = $CheckboxD.Checked
     $libreOfficeChecked = $CheckboxL.Checked
+    $ThunderBirdChecked = $CheckboxTH.Checked
+    $BrotherPrinterChecked = $CheckboxB.Checked
+
     # variablen setzen
     $script:firefox = $firefoxChecked
     $script:chrome = $chromeChecked
@@ -179,6 +196,9 @@ $Button.Add_Click({
     $script:keepass = $keepassChecked
     $script:datev = $datevChecked
     $script:libreOffice = $libreOfficeChecked
+    $script:thunderbird = $ThunderBirdChecked
+    $script:brotherprinter = $BrotherPrinterChecked
+    
     # schliessen
     $Form.Close()
 })
@@ -408,6 +428,29 @@ if ($libreOffice) {
     Invoke-WebRequest -Uri $libreOfficeUrl -OutFile $libreOfficePath
     Start-Process 'msiexec.exe' -ArgumentList "/i `"$libreOfficePath`" /qn /norestart" -Wait
     Write-Host 'LibreOffice installiert!' -ForegroundColor Green
+}
+
+if ($thunderbird) {
+    Write-Host 'Starte Download von Thunderbird...' -ForegroundColor Cyan
+    $thunderbirdUrl = 'https://download.mozilla.org/?product=thunderbird-159.0-SSL&os=win64&lang=de'
+    $thunderbirdPath = Join-Path $scriptDir 'thunderbird-setup.exe'
+    Invoke-WebRequest -Uri $thunderbirdUrl -OutFile $thunderbirdPath -ErrorAction Stop
+    $thunderbirdProcess = Start-Process -FilePath $thunderbirdPath -ArgumentList '-ms' -Wait -PassThru -WindowStyle Hidden
+    if ($thunderbirdProcess.ExitCode -ne 0) {
+        throw "Thunderbird-Installation fehlgeschlagen (Exitcode $($thunderbirdProcess.ExitCode))."
+    }
+    Write-Host 'Thunderbird installiert!' -ForegroundColor Green
+}
+
+if ($brotherPrinter) {
+    Write-Host 'Starte stille Installation von Brother iPrint&Scan...' -ForegroundColor Cyan
+    $wingetCommand = Get-Command 'winget.exe' -ErrorAction Stop
+    & $wingetCommand.Source install -e --id Brother.iPrintScan --silent --accept-source-agreements --accept-package-agreements
+    $brotherExitCode = $LASTEXITCODE
+    if ($brotherExitCode -ne 0) {
+        throw "Brother iPrint&Scan-Installation fehlgeschlagen (WinGet-Exitcode $brotherExitCode)."
+    }
+    Write-Host 'Brother iPrint&Scan installiert!' -ForegroundColor Green
 }
 
 Write-Host $DEKO
